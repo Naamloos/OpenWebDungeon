@@ -1,0 +1,8 @@
+{
+    "name": "simple sword",
+    "buy_price": null,
+    "sell_price": 500,
+    "tradeable": false,
+    "image_asset": "sword.png",
+    "name_color_css": "#000000"
+}

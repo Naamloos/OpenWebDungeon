@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  owd-web: # Do not forget to modfy .env!
+    hostname: owd-web
+    environment:
+      - PORT=80
+      - API_HOST=owd-api
+      - API_PORT=8008
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - owd-network
+
+  owd-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    hostname: owd-api
+    environment:
+      - DB_TYPE=postgres
+      - DB_NAME=OpenWebDungeon
+      - DB_USER=root
+      - DB_PASS=toor
+      - DB_HOST=127.0.0.1
+      - PORT=8008
+    volumes:
+      - owd-data:/var/owd-data # Binding to data volume to ensure we can fetch data from json files and images from assets.
+    networks: # Requires manually adding to bridge.
+      - owd-network
+      - nginx-network
+
+networks:
+  nginx-network:
+    external: true
+    name: nginx # CHANGEME Your reverse proxy's network
+  owd-network:
+    external: false
+
+volumes:
+  owd-data:
